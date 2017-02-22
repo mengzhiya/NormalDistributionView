@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wave="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff" >
+
+    <com.mare.curve.CurveView
+        android:id="@+id/waveLoadingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        wave:amplitude="100"
+        wave:label="啦啦啦"
+        android:layout_gravity="top"
+        wave:peak_color="@android:color/holo_red_light"
+        wave:peakvalue="12"
+        wave:wave_color="@android:color/holo_orange_light"
+        wave:wavelenth="200" />
+
+
+</FrameLayout>
