@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wave="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#66666666" >
+
+    <com.mare.curve.CurveView
+        android:id="@+id/first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="first"
+        wave:amplitude="100"
+        wave:label="啦啦啦"
+        wave:peak_color="@android:color/holo_red_light"
+        wave:peakvalue="12"
+        wave:wave_color="@android:color/holo_orange_light"
+        wave:wavelenth="200" />
+
+</RelativeLayout>

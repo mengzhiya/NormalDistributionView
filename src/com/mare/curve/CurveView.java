@@ -18,8 +18,8 @@ public class CurveView extends View {
 	private int mWavelength;// 波长
 	private String mLabel;// 标签
 	private Paint mPaint;
-	private int mPeakCircleColor = Color.argb(120, 250, 0, 0),
-			mPeakValueColor = Color.BLACK, mWaveFillColor = Color.BLUE;
+	private int mPeakCircleColor = Color.argb(200, 250, 0, 0),
+			mPeakValueColor = Color.BLACK, mWaveFillColor = Color.argb(150, 128, 128, 0);
 	private static final float DEFAULT_AMPLITUDE_VALUE = 50.0f;
 	private static final int DEFAULT_WAVELENTH = 200;
 	private int mWaveColor,mLabelColor;
@@ -27,8 +27,10 @@ public class CurveView extends View {
 	private int mPeakValue;
 	private int mMarginLeft = 0,mPeakValueMargintTop = 0,mLabelMargintTop = 0;
 	private Matrix mMatrix ;
-	private int mCanvasWidth ;
-	Rect mLabelBounds = new  Rect();
+	private Rect mLabelBounds = new  Rect();
+	private int mLeftSpace = 0, mCanvasHeight;
+	private int mOffset = (int) (Math.PI / 4);
+	private int mCenterX;
 
 	public CurveView(Context context) {
 		this(context, null);
@@ -55,7 +57,7 @@ public class CurveView extends View {
 		mLabelColor = attributes.getColor(R.styleable.WaveCurve_label_color, mPeakValueColor);
 		Log.i(VIEW_LOG_TAG, "mAmplitude : " + mAmplitude + ", mWavelength : " + mWavelength);
 		mMarginLeft = dp2px(10);
-		mLabelMargintTop = dp2px(10);
+		mLabelMargintTop = dp2px(1);
 		mPeakValueMargintTop = dp2px(3);
 		attributes.recycle();
 		mMatrix = new  Matrix();
@@ -85,27 +87,43 @@ public class CurveView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		canvas.save();
-		if (null == mMatrix) {
-			mMatrix = getMatrix();
-		}
-		mMatrix.setTranslate(-(mWavelength * 3 /4 - mMarginLeft), mAmplitude / 2);
-		canvas.setMatrix(mMatrix);
 		drawCurve(canvas);
-		canvas.restore();
 	}
 
 
 	private void drawCurve(Canvas canvas) {  
 		// y=Asin(wx+$)+h
+		canvas.save();
+		if (null == mMatrix) {
+			mMatrix = getMatrix();
+			
+		}
+		mMatrix.setTranslate(mWavelength / 4 + mLeftSpace, 0);
+		canvas.setMatrix(mMatrix);
+		drawWave(canvas);
+		canvas.restore();
+		mPaint.setColor(mPeakCircleColor);
+		mPaint.setStyle(Style.STROKE);
+		mPaint.setTextSize(24);
+		canvas.drawCircle((float) (mCenterX + Math.PI / 4), WATER_LEVEL_LINE - mAmplitude * 2, 6, mPaint);
+		mPaint.setTextSize(24);
+		mPaint.setColor(mPeakValueColor);
+		mPaint.setStyle(Style.FILL);
+		canvas.drawText(mPeakValue +"", mCenterX , WATER_LEVEL_LINE - mAmplitude * 2 - mPeakValueMargintTop, mPaint);
+		float labelWidth = mPaint.measureText(mLabel);
+		canvas.drawText(mLabel +"", mCenterX - labelWidth / 2, WATER_LEVEL_LINE  + mLabelMargintTop + (mLabelBounds.bottom - mLabelBounds.top), mPaint);
+		canvas.drawLine(0, WATER_LEVEL_LINE,mWavelength , WATER_LEVEL_LINE, mPaint);
+	}
+	
+	private void drawWave(Canvas canvas) {
 		Path path = new Path();
 		double defaultAngularFrequency = 2.0f * Math.PI / mWavelength;
-		int i = mWavelength * 3 / 4;
-		int end = mWavelength * 7 / 4;
-		int centerX = (i + end) /2 ;
+		int i = -mWavelength * 1 / 4;
+		int end = mWavelength * 3 / 4 ;
+		mCenterX = /*(i + end) /2*/mWavelength /2  ;
 		for (; i <= end ; i++) {
-			double wx = defaultAngularFrequency * i ;
-			float curY = (float) ( WATER_LEVEL_LINE -   mAmplitude * Math.sin(wx));
+			double wx = defaultAngularFrequency * (i - mOffset) ;
+			float curY = (float) ( WATER_LEVEL_LINE - mAmplitude -  mAmplitude * Math.sin(wx));
 			if (path.isEmpty()) {
 				path.moveTo(i, curY);
 			}
@@ -115,25 +133,20 @@ public class CurveView extends View {
 		mPaint.setTextSize(10);
 		mPaint.setColor(mWaveColor);
 		canvas.drawPath(path, mPaint);
-		mPaint.setColor(mPeakCircleColor);
-		mPaint.setStyle(Style.STROKE);
-		canvas.drawCircle(centerX, WATER_LEVEL_LINE - mAmplitude, 4, mPaint);
-		mPaint.setTextSize(18);
-		mPaint.setColor(mPeakValueColor);
-		mPaint.setStyle(Style.FILL);
-		canvas.drawText(mPeakValue +"", centerX, WATER_LEVEL_LINE - mAmplitude - mPeakValueMargintTop, mPaint);
-		float width = mPaint.measureText(mLabel);
-		canvas.drawText(mLabel +"", centerX - width /2, WATER_LEVEL_LINE  + mAmplitude + mLabelMargintTop + mLabelBounds.centerY(), mPaint);
-		Log.i(VIEW_LOG_TAG, "getWidth : " + getWidth());
 	}
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mPaint.setTextSize(18);
+		if (mLeftSpace != getLeft()) {
+			mLeftSpace = getLeft();
+		};
+		mPaint.setTextSize(24);
+		mPaint.setStyle(Style.FILL);
 		mPaint.getTextBounds(mLabel, 0, mLabel.length() -1, mLabelBounds);
-		Log.i(VIEW_LOG_TAG, "mLabelBounds : " + mLabelBounds.toString());
-		setMeasuredDimension(mWavelength  + mMarginLeft * 2, (int) (mLabelBounds.bottom - mLabelBounds.top + mLabelMargintTop * 2 + WATER_LEVEL_LINE + mAmplitude));
+		mCanvasHeight = (int) (mLabelBounds.bottom - mLabelBounds.top + mLabelMargintTop * 2 + WATER_LEVEL_LINE );
+		Log.i(VIEW_LOG_TAG, "tag : " + getTag() + " ,mLeftSpace : " + mLeftSpace + ", getX : " + getX() + ", mlabelbound :" + mLabelBounds.toString());
+		setMeasuredDimension(mWavelength /* + mMarginLeft * 2*/ ,mCanvasHeight );
 	}
 	
     private int dp2px(float dp) {
