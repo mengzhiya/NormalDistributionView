@@ -24,13 +24,12 @@ public class CurveView extends View {
 	private static final int DEFAULT_WAVELENTH = 200;
 	private int mWaveColor,mLabelColor;
 	private final static int WATER_LEVEL_LINE = 300;
-	private int mPeakValue;
 	private int mMarginLeft = 0,mPeakValueMargintTop = 0,mLabelMargintTop = 0;
 	private Matrix mMatrix ;
 	private Rect mLabelBounds = new  Rect();
 	private int mLeftSpace = 0, mCanvasHeight;
 	private int mOffset = (int) (Math.PI / 4);
-	private int mCenterX;
+	private int mCenterX,mPeakValue;
 
 	public CurveView(Context context) {
 		this(context, null);
@@ -50,9 +49,9 @@ public class CurveView extends View {
 		TypedArray attributes = context.obtainStyledAttributes(attrs,
 				R.styleable.WaveCurve, defStyleAttr, 0);
 		mWaveColor = attributes.getColor(R.styleable.WaveCurve_wave_color, mWaveFillColor);
-		mAmplitude = attributes.getFloat(R.styleable.WaveCurve_amplitude, DEFAULT_AMPLITUDE_VALUE);
 		mWavelength = attributes.getInt(R.styleable.WaveCurve_wavelenth, DEFAULT_WAVELENTH);
 		mPeakValue = attributes.getInt(R.styleable.WaveCurve_peakvalue, 0);
+		mAmplitude = mPeakValue * 10f;
 		mLabel = attributes.getString(R.styleable.WaveCurve_label);
 		mLabelColor = attributes.getColor(R.styleable.WaveCurve_label_color, mPeakValueColor);
 		Log.i(VIEW_LOG_TAG, "mAmplitude : " + mAmplitude + ", mWavelength : " + mWavelength);
@@ -75,13 +74,13 @@ public class CurveView extends View {
 		this.mLabel = mLabel;
 	}
 
-	public CurveView(Context context, float mAmplitude, int mWavelength,
-			String mLabel,int peakValue) {
+	public CurveView(Context context, int  peakValue, int mWavelength,
+			String mLabel) {
 		this(context);
-		this.mAmplitude = mAmplitude;
+		this.mPeakValue = peakValue;
+		this.mAmplitude = peakValue * 10f;
 		this.mWavelength = mWavelength;
 		this.mLabel = mLabel;
-		this.mPeakValue = peakValue;
 	}
 
 	@Override

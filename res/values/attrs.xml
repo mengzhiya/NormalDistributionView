@@ -40,7 +40,6 @@
     </declare-styleable>
     <declare-styleable name="WaveCurve">
         <attr name="label" format="string" />
-        <attr name="amplitude" format="float" />
         <attr name="wavelenth" format="integer" />
         <attr name="peakvalue" format="integer" />
         <attr name="wave_color" format="color" />
