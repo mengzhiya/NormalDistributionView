@@ -1,8 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:wave="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#66666666" >
+    android:background="#fff" 
+    android:orientation="vertical">
 
     <com.mare.curve.CurveView
         android:id="@+id/first"
@@ -15,40 +16,4 @@
         wave:wave_color="@android:color/holo_orange_light"
         wave:wavelenth="200" />
 
-    <com.mare.curve.CurveView
-        android:id="@+id/second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/first"
-        android:tag="second"
-        wave:label="啦啦啦"
-        wave:peak_color="@android:color/holo_red_light"
-        wave:peakvalue="8"
-        wave:wave_color="@android:color/holo_red_dark"
-        wave:wavelenth="200" />
-
-    <com.mare.curve.CurveView
-        android:id="@+id/third"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/second"
-        android:tag="third"
-        wave:label="啦啦啦"
-        wave:peak_color="@android:color/holo_red_light"
-        wave:peakvalue="8"
-        wave:wave_color="@android:color/holo_red_dark"
-        wave:wavelenth="200" />
-
-    <com.mare.curve.CurveView
-        android:id="@+id/forth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/third"
-        android:tag="forth"
-        wave:label="啦啦啦"
-        wave:peak_color="@android:color/holo_red_light"
-        wave:peakvalue="5"
-        wave:wave_color="@android:color/holo_red_dark"
-        wave:wavelenth="200" />
-
-</RelativeLayout>
+</LinearLayout>
